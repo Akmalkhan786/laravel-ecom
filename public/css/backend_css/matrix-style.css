@@ -537,7 +537,8 @@ hr{ border-top-color:#dadada;}
 .widget-title, .modal-header, .table th, div.dataTables_wrapper .ui-widget-header {
 	 background:#efefef;
 	border-bottom: 1px solid #CDCDCD;
-	height: 36px;  
+	height: 36px;
+	border-top: 1px solid #cdcdcd;
 }
 .widget-title .nav-tabs {
 	border-bottom: 0 none; 
@@ -1586,4 +1587,20 @@ div.dataTables_wrapper .ui-widget-header {
 	text-align: center;
 }
 #sidebar .content{ display:none;}
+}
+.not-found-style{
+	margin: 10px 40px;
+	padding: 10px 20px;
+}
+.margin-for-add-button {
+	margin-right: 35px;
+}
+.add-remove-style{
+	width: 120px;
+}
+.after-add-remove-style {
+	padding: 10px 175px;
+}
+.after-add-remove-style input {
+	margin-left: 4px;
 }

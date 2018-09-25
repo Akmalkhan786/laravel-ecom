@@ -1,6 +1,7 @@
 
 $(document).ready(function(){
 
+	//Password Update
 	$('#new_pwd').click(function () {
 		var current_password = $('#current_pwd').val();
 		$.ajax({
@@ -23,36 +24,119 @@ $(document).ready(function(){
 	$('input[type=checkbox],input[type=radio],input[type=file]').uniform();
 	
 	$('select').select2();
-	
-	// Form Validation
-    $("#basic_validate").validate({
-		rules:{
-			required:{
-				required:true
+
+    // Add Category Validations
+    $("#add_category").validate({
+        rules:{
+            category_name:{
+                required:true
+            },
+            description:{
+                required:true
+            },
+            url:{
+                required:true
+            }
+        },
+        errorClass: "help-inline",
+        errorElement: "span",
+        highlight:function(element, errorClass, validClass) {
+            $(element).parents('.control-group').addClass('error');
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).parents('.control-group').removeClass('error');
+            $(element).parents('.control-group').addClass('success');
+        }
+    });
+
+    // Edit Category Validations
+    $("#edit_category").validate({
+        rules:{
+            category_name:{
+                required:true
+            },
+            description:{
+                required:true
+            },
+            url:{
+                required:true
+            }
+        },
+        errorClass: "help-inline",
+        errorElement: "span",
+        highlight:function(element, errorClass, validClass) {
+            $(element).parents('.control-group').addClass('error');
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).parents('.control-group').removeClass('error');
+            $(element).parents('.control-group').addClass('success');
+        }
+    });
+
+    // Add Product Validations
+    $("#add_product").validate({
+        rules:{
+            category_id:{
+                required:true
+            },
+            product_name:{
+                required:true
+            },
+			product_code:{
+            	required:true
 			},
-			email:{
-				required:true,
-				email: true
+            product_color:{
+                required:true
+            },
+			price:{
+            	required:true,
+				number:true
 			},
-			date:{
-				required:true,
-				date: true
-			},
-			url:{
-				required:true,
-				url: true
+			image:{
+            	required:true
 			}
-		},
-		errorClass: "help-inline",
-		errorElement: "span",
-		highlight:function(element, errorClass, validClass) {
-			$(element).parents('.control-group').addClass('error');
-		},
-		unhighlight: function(element, errorClass, validClass) {
-			$(element).parents('.control-group').removeClass('error');
-			$(element).parents('.control-group').addClass('success');
-		}
-	});
+        },
+        errorClass: "help-inline",
+        errorElement: "span",
+        highlight:function(element, errorClass, validClass) {
+            $(element).parents('.control-group').addClass('error');
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).parents('.control-group').removeClass('error');
+            $(element).parents('.control-group').addClass('success');
+        }
+    });
+
+    // Edit Product Validations
+    $("#edit_category").validate({
+        rules:{
+            category_id:{
+                required:true
+            },
+            product_name:{
+                required:true
+            },
+            product_code:{
+                required:true
+            },
+            product_color:{
+                required:true
+            },
+            price:{
+                required:true,
+                number:true
+            }
+        },
+        errorClass: "help-inline",
+        errorElement: "span",
+        highlight:function(element, errorClass, validClass) {
+            $(element).parents('.control-group').addClass('error');
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).parents('.control-group').removeClass('error');
+            $(element).parents('.control-group').addClass('success');
+        }
+    });
 	
 	$("#number_validate").validate({
 		rules:{
@@ -109,4 +193,91 @@ $(document).ready(function(){
 			$(element).parents('.control-group').addClass('success');
 		}
 	});
+
+    // Add Product Attributes Validations
+    $('#add_attribute').validate({
+        rules:{
+            sku:{
+                required: true
+            },
+            size:{
+                required: true
+            },
+            price:{
+                required: true
+            },
+            stock:{
+                required: true
+            }
+        },
+        errorClass: "help-inline",
+        errorElement: "span",
+        highlight: function (element, errorClass, validClass) {
+          $(element).parents('.control-group').addClass('error');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).parents('.control-group').removeClass('error');
+            $(element).parents('.control-group').addClass('success');
+        }
+    });
+
+	// Delete Category
+	$('#delCat').click(function () {
+		if (confirm('Are you sure to delete this category?')){
+			return true;
+		} else {
+			return false;
+		}
+    });
+
+	// Delete Product
+    $('#delProduct').click(function () {
+        if (confirm('Are you sure to delete this product?')){
+            return true;
+        } else {
+            return false;
+        }
+    });
+
+    // Delete Image
+    $('#delImage').click(function () {
+        if (confirm('Are you sure to delete this image?')){
+            return true;
+        } else {
+            return false;
+        }
+    });
+
+    // Delete Product Attribute
+    $('#delProductAttribute').click(function () {
+        if (confirm('Are you sure to delete this product attribute?')){
+            return true;
+        } else {
+            return false;
+        }
+    });
+
+    // Add/Remove Jquery
+    $(document).ready(function () {
+       var maxField = 10;
+       var addButton = $('.add_button');
+       var wrapper = $('.field_wrapper');
+       var fieldHtml = '<div class="after-add-remove-style"><input type="text" name="sku[]" id="sku" placeholder="Sku" class="add-remove-style">' +
+           '<input type="text" name="size[]" id="size" placeholder="Size" class="add-remove-style">' +
+           '<input type="text" name="price[]" id="price" placeholder="Price" class="add-remove-style">' +
+           '<input type="text" name="stock[]" id="stock" placeholder="Stock" class="add-remove-style">' +
+           '<a href="javascript:void(0);" class="remove_button" title="Remove field"> Remove</a></div>';
+       var x = 1;
+       $(addButton).click(function () {
+           if (x < maxField){
+               x++;
+               $(wrapper).append(fieldHtml);
+           }
+       });
+       $(wrapper).on('click', '.remove_button', function (e) {
+           e.preventDefault();
+           $(this).parent('div').remove();
+           x--;
+       });
+    });
 });
