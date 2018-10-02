@@ -257,6 +257,15 @@ $(document).ready(function(){
         }
     });
 
+    // Delete Product Alternate Images
+    $('#delAltProImages').click(function () {
+        if (confirm('Are you sure to delete this alternate image of this product?')){
+            return true;
+        } else {
+            return false;
+        }
+    });
+
     // Add/Remove Jquery
     $(document).ready(function () {
        var maxField = 10;

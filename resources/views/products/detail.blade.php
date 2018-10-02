@@ -12,38 +12,28 @@
                     <div class="product-details"><!--product-details-->
                         <div class="col-sm-5">
                             <div class="view-product">
-                                <img src="{{asset('/images/backend_images/products/medium/'.$product['image'])}}" alt="" />
-                                <h3>ZOOM</h3>
+                                <div class="easyzoom easyzoom--overlay easyzoom--with--thumbnails">
+                                    <a href="{{asset('images/backend_images/products/large/'.$product['image'])}}">
+                                        <img style="width: 300px;" class="mainImage" src="{{asset('images/backend_images/products/medium/'.$product['image'])}}" alt="" />
+                                    </a>
+                                </div>
+                                {{--<h3>ZOOM</h3>--}}
                             </div>
                             <div id="similar-product" class="carousel slide" data-ride="carousel">
 
                                 <!-- Wrapper for slides -->
                                 <div class="carousel-inner">
-                                    <div class="item active">
-                                        <a href=""><img src="images/product-details/similar1.jpg" alt=""></a>
-                                        <a href=""><img src="images/product-details/similar2.jpg" alt=""></a>
-                                        <a href=""><img src="images/product-details/similar3.jpg" alt=""></a>
+                                    <div class="item active thumbnails">
+                                        <a href="{{asset('images/backend_images/products/large/'. $product->image)}}" data-standard="{{asset('images/backend_images/products/small/'. $product->image)}}">
+                                            <img src="{{asset('images/backend_images/products/small/'. $product->image)}}" class="changeImage" style="width: 80px;">
+                                        </a>
+                                        @foreach($productAltImages as $altImage)
+                                            <a href="{{asset('images/backend_images/products/large/alternateImages/'. $altImage->image)}}" data-standard="{{asset('images/backend_images/products/small/alternateImages/'. $altImage->image)}}">
+                                                <img class="changeImage" src="{{asset('images/backend_images/products/small/alternateImages/'. $altImage->image)}}" width="80" style="cursor: pointer">
+                                            </a>
+                                        @endforeach
                                     </div>
-                                    <div class="item">
-                                        <a href=""><img src="images/product-details/similar1.jpg" alt=""></a>
-                                        <a href=""><img src="images/product-details/similar2.jpg" alt=""></a>
-                                        <a href=""><img src="images/product-details/similar3.jpg" alt=""></a>
-                                    </div>
-                                    <div class="item">
-                                        <a href=""><img src="images/product-details/similar1.jpg" alt=""></a>
-                                        <a href=""><img src="images/product-details/similar2.jpg" alt=""></a>
-                                        <a href=""><img src="images/product-details/similar3.jpg" alt=""></a>
-                                    </div>
-
                                 </div>
-
-                                <!-- Controls -->
-                                <a class="left item-control" href="#similar-product" data-slide="prev">
-                                    <i class="fa fa-angle-left"></i>
-                                </a>
-                                <a class="right item-control" href="#similar-product" data-slide="next">
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
                             </div>
 
                         </div>
@@ -66,12 +56,14 @@
 									<span id="getPrice">RS {{$product->price}}</span>
 									<label>Quantity:</label>
 									<input type="text" value="1" />
-									<button type="button" class="btn btn-fefault cart">
+                                    @if($total_stock > 0)
+                                        <button type="button" class="btn btn-fefault cart">
 										<i class="fa fa-shopping-cart"></i>
 										Add to cart
 									</button>
+                                    @endif
 								</span>
-                                <p><b>Availability:</b> In Stock</p>
+                                <p><b>Availability:</b> @if($total_stock > 0) In Stock @else Out of Stock @endif</p>
                                 <p><b>Condition:</b> New</p>
                                 <a href=""><img src="images/product-details/share.png" class="share img-responsive"  alt="" /></a>
                             </div><!--/product-information-->

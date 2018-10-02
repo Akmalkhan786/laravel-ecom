@@ -27,7 +27,7 @@
                                     <label class="control-label"><strong>{{$product->product_code}}</strong></label>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label">Image</label>
+                                    <label class="control-label">Alternate Image(s)</label>
                                     <div class="controls">
                                         <input type="file" name="image[]" id="image" multiple="multiple">
                                     </div>
@@ -49,8 +49,8 @@
                             <h5>View Images</h5>
                         </div>
                         <div class="widget-content nopadding">
-                            <table class="table table-bordered table-striped">
-                                @if(count($product['attributes']) > 0)
+                            <table class="table table-bordered table-striped data-table">
+                                @if(count($productImages) > 0)
                                     <thead>
                                     <tr>
                                         <th>Image Id</th>
@@ -60,8 +60,21 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach($productImages as $image)
+                                            <tr>
+                                                <td>{{$image->id}}</td>
+                                                <td>{{$image->product_id}}</td>
+                                                <td>
+                                                    <img src="{{asset('/images/backend_images/products/small/alternateImages/'. $image->image)}}" width="80">
+                                                </td>
+                                                <td>
+                                                    <a id="delAltProImages" class="btn btn-danger btn-mini" href="{{url('/admin/delete-alternate-images/'. $image->id)}}"><i class="icon-trash"></i> Delete</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
                                 @else
-                                    <p class="label label-important not-found-style">There is no attribute to show</p>
+                                    <p class="label label-important not-found-style">There is no alternate images to show</p>
                                 @endif
                             </table>
                         </div>

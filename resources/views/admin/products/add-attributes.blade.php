@@ -59,36 +59,40 @@
                             <h5>View Attributes</h5>
                         </div>
                         <div class="widget-content nopadding">
-                            <table class="table table-bordered table-striped">
-                                @if(count($product['attributes']) > 0)
-                                    <thead>
-                                    <tr>
-                                        <th>Attribute Id</th>
-                                        <th>Sku</th>
-                                        <th>Size</th>
-                                        <th>Price</th>
-                                        <th>Stock</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($product['attributes'] as $key=>$attribute)
-                                        <tr class="odd gradeX">
-                                            <td>{{$key + 1}}</td>
-                                            <td>{{$attribute->sku}}</td>
-                                            <td>{{$attribute->size}}</td>
-                                            <td>{{$attribute->price}}</td>
-                                            <td>{{$attribute->stock}}</td>
-                                            <td>
-                                                <a id="delProductAttribute" class="btn btn-danger btn-mini" href="{{url('/admin/delete-attribute/' . $attribute->id)}}"><i class="icon-trash"></i> Delete</a>
-                                            </td>
+                            <form action="{{url('/admin/edit-attributes/'. $product->id)}}" method="post">
+                                @csrf
+                                <table class="table table-bordered table-striped">
+                                    @if(count($product['attributes']) > 0)
+                                        <thead>
+                                        <tr>
+                                            <th>Attribute Id</th>
+                                            <th>Sku</th>
+                                            <th>Size</th>
+                                            <th>Price</th>
+                                            <th>Stock</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
-                                    </tbody>
-                                @else
-                                    <p class="label label-important not-found-style">There is no attribute to show</p>
-                                @endif
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($product['attributes'] as $attribute)
+                                            <tr class="odd gradeX">
+                                                <td><input type="hidden" name="idAttr[]" value="{{$attribute->id}}">{{$attribute->id}}</td>
+                                                <td>{{$attribute->sku}}</td>
+                                                <td>{{$attribute->size}}</td>
+                                                <td><input type="text" name="price[]" value="{{$attribute->price}}"></td>
+                                                <td><input type="text" name="stock[]" value="{{$attribute->stock}}"></td>
+                                                <td>
+                                                    <input type="submit" value="Update" class="btn btn-primary btn-mini">
+                                                    <a id="delProductAttribute" class="btn btn-danger btn-mini" href="{{url('/admin/delete-attribute/' . $attribute->id)}}"><i class="icon-trash"></i> Delete</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    @else
+                                        <p class="label label-important not-found-style">There is no attribute to show</p>
+                                    @endif
+                                </table>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Product;
 use App\ProductsAttribute;
+use App\ProductsImage;
 use Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -183,16 +184,60 @@ class ProductsController extends Controller
         return view('admin.products.add-attributes', compact('product'));
     }
 
+    public function editAttributes(Request $request, $id = null){
+        if ($request->isMethod('post')){
+            $data = $request->all();
+            foreach ($data['idAttr'] as $key=>$attr){
+                ProductsAttribute::where(['id' => $data['idAttr'][$key]])->update(['price'=>$data['price'][$key],'stock'=>$data['stock'][$key]]);
+            }
+            return redirect()->back()->with('success', 'Product Attributes has been updated successfully!');
+        }
+    }
+
     public function addImages(Request $request, $id = null){
-        $product = Product::with('attributes')->where('id', $id)->first();
+        $product = Product::where('id', $id)->first();
         if ($request->isMethod('post')){
             $data = $request->all();
             if ($request->hasFile('image')){
                 $files = $request->file('image');
-                echo '<pre>'; print_r($files); die;
+                foreach ($files as $file){
+                    // Upload Images after resize
+                    $image = new ProductsImage;
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName = rand(111, 99999).'.'. $extension;
+                    $large_image_path = 'images/backend_images/products/large/alternateImages/' .$fileName;
+                    $medium_image_path = 'images/backend_images/products/medium/alternateImages/' .$fileName;
+                    $small_image_path = 'images/backend_images/products/small/alternateImages/' .$fileName;
+                    Image::make($file)->save($large_image_path);
+                    Image::make($file)->resize(600,600)->save($medium_image_path);
+                    Image::make($file)->resize(300,300)->save($small_image_path);
+                    $image->image = $fileName;
+                    $image->product_id = $data['product_id'];
+                    $image->save();
+                }
             }
+            return redirect('admin/add-images/' .$id)->with('success', 'Product Alternate Images added successfully!');
         }
-        return view('admin.products.add-image', compact('product'));
+        $productImages = ProductsImage::where('product_id', $id)->get();
+        return view('admin.products.add-image', compact('product', 'productImages'));
+    }
+
+    public function deleteAlternateProductImages($id = null){
+        $productImage = ProductsImage::where('id', $id)->first();
+        $large_image_path = 'images/backend_images/products/large/alternateImages/';
+        $medium_image_path = 'images/backend_images/products/medium/alternateImages/';
+        $small_image_path = 'images/backend_images/products/small/alternateImages/';
+        if (file_exists($large_image_path.$productImage->image)){
+            unlink($large_image_path.$productImage->image);
+        }
+        if (file_exists($medium_image_path.$productImage->image)){
+            unlink($medium_image_path.$productImage->image);
+        }
+        if (file_exists($small_image_path.$productImage->image)){
+            unlink($small_image_path.$productImage->image);
+        }
+        $productImage->delete();
+        return redirect()->back()->with('success', 'Product Alternate Image Deleted Successfully!');
     }
 
     public function deleteAttributes($id = null){
@@ -224,8 +269,10 @@ class ProductsController extends Controller
 
     public function product($id = null){
         $product = Product::with('attributes')->where('id', $id)->first();
+        $productAltImages = ProductsImage::where('product_id', $id)->get();
         $categories = Category::with('categories')->where('parent_id', 0)->get();
-        return view('products.detail', compact('categories', 'product'));
+        $total_stock = ProductsAttribute::where('product_id', $id)->sum('stock');
+        return view('products.detail', compact('categories', 'product', 'productAltImages', 'total_stock'));
     }
 
     public function getProductPrice(Request $request){
