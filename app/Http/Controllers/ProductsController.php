@@ -269,10 +269,20 @@ class ProductsController extends Controller
 
     public function product($id = null){
         $product = Product::with('attributes')->where('id', $id)->first();
+        $relatedProducts = Product::where('id','!=',$id)->where(['category_id'=>$product->category_id])->get();
+//        $relatedProducts = json_decode(json_encode($relatedProducts));
+//        echo '<pre>'; print_r($relatedProducts); die;
+//        foreach ($relatedProducts->chunk(3) as $chunk){
+//            foreach ($chunk as $item){
+//                echo $item; echo '<br>';
+//            }
+//            echo '<br><br><br>';
+//        }
+//        die;
         $productAltImages = ProductsImage::where('product_id', $id)->get();
         $categories = Category::with('categories')->where('parent_id', 0)->get();
         $total_stock = ProductsAttribute::where('product_id', $id)->sum('stock');
-        return view('products.detail', compact('categories', 'product', 'productAltImages', 'total_stock'));
+        return view('products.detail', compact('categories', 'product', 'productAltImages', 'total_stock', 'relatedProducts'));
     }
 
     public function getProductPrice(Request $request){
